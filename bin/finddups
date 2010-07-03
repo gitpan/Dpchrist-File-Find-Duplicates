@@ -1,0 +1,137 @@
+#! /usr/bin/perl
+#######################################################################
+# $Id: finddups,v 1.32 2010-06-06 05:48:40 dpchrist Exp $
+#######################################################################
+# uses:
+#----------------------------------------------------------------------
+
+use strict;
+use warnings;
+
+use constant				DEBUG => 1;
+
+use Carp;
+use Digest::MD5;
+use Dpchrist::Debug			qw( :all );
+use Dpchrist::File::Find::Duplicates	qw( :all );
+use File::Compare			qw( compare_text );
+use File::Find;
+use Getopt::Long;
+use Pod::Usage;
+
+#######################################################################
+# globals:
+#----------------------------------------------------------------------
+
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.32 $ =~ /(\d+)/g);
+
+my $opt = \%Dpchrist::File::Find::Duplicates::opt;
+
+my %getoptions_args = (
+    'delete'		=> \$opt->{-delete},
+    'help|h|?'		=> \$opt->{-help},
+    'man'		=> \$opt->{-man},
+    'show-keeper|k'	=> \$opt->{-show_keeper},
+    'verbose|v+'	=> \$opt->{-verbose},
+);
+
+#######################################################################
+# main:
+#----------------------------------------------------------------------
+
+{
+    ### process command line options:
+
+    Getopt::Long::Configure("bundling");
+
+    my $r = GetOptions( %getoptions_args );
+
+    if (DEBUG && debug_enabled()) {
+	$Data::Dumper::Sortkeys = 1;
+	$|                      = 1;
+	ddump [$opt, \@ARGV],
+	    [qw(opt   *ARGV)];
+    }
+
+    confess "ERROR processing command line options"
+    	unless $r;
+
+    pod2usage(-verbose => 2, -exitval => 0) if $opt->{-man};
+
+    pod2usage(0) if $opt->{-help};
+
+    pod2usage(1) unless 0 < @ARGV;
+
+
+    ### do the work:
+
+    $r = file_find_duplicate(@ARGV);
+}
+
+#######################################################################
+# end of code:
+#----------------------------------------------------------------------
+
+__END__
+
+#######################################################################
+
+=head1 NAME
+
+finddups - find duplicate files
+
+
+=head1 SYNOPSIS
+
+    finddups [options] [PATH...]
+
+    Options:
+	--delete           Delete duplicates
+	--help, -h, -?     Print a brief help message and exit
+	--man              Print the manual page and exit
+	--show-keeper, -k  Print keeper files preceeded by hash (#)
+	--verbose, -v      Print informational messages on STDERR
+
+
+=head1 DESCRIPTION
+
+Recursively searchs PATH,
+groups files by size,
+iterates through groups one file at a time,
+and prints any duplicate(s) found
+(the path with the lowest Perl text sorting order is not printed).
+
+=head1 OPTIONS
+
+--verbose option may be given multiple times.
+More information is printed as verbosity increases.
+
+If PATH is omitted,
+reads file/ directory names from STDIN (Unix filter).
+
+=head1 AUTHOR
+
+David Paul Christensen dpchrist@holgerdanske.com
+
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright (C) 2009 by David Paul Chirstensen dpchrist@holgerdanske.com
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; version 2.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307,
+USA.
+
+=cut
+
+#######################################################################

@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name:                Dpchrist-File-Find-Duplicates
+version:             1.007
+abstract:            find duplicate files
+license:             ~
+author:              
+    - David Paul Christensen <dpchrist@holgerdanske.com>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
+    Dpchrist::Debug:               1.036
+    Dpchrist::Module:              1.016
+    feature:                       0
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
