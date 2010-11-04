@@ -1,5 +1,5 @@
 #######################################################################
-# $Id: Duplicates.pm,v 1.7 2010-07-03 01:17:20 dpchrist Exp $
+# $Id: Duplicates.pm,v 1.9 2010-09-01 03:26:02 dpchrist Exp $
 #######################################################################
 # package:
 #----------------------------------------------------------------------
@@ -22,7 +22,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = sprintf("%d.%03d", q$Revision: 1.7 $ =~ /(\d+)/g);
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.9 $ =~ /(\d+)/g);
 
 #######################################################################
 # uses:
@@ -42,9 +42,11 @@ use File::Find;
 # globals:
 #----------------------------------------------------------------------
 
-my $dotflag;
+$\ = 1 if DEBUG;
 
-my $dottime;
+my $dotflag = 0;
+
+my $dottime = 0;
 
 our %opt = (
 );
@@ -57,7 +59,7 @@ my %used_only_once = (
 
 #######################################################################
 
-sub dotnew
+sub dot
 {
     print STDERR '.';
     $dotflag = 1;
@@ -79,7 +81,7 @@ sub status
 {
     dotnl;
     print STDERR @_;
-    dotnew;
+    dot;
 }
 
 #----------------------------------------------------------------------
@@ -90,7 +92,7 @@ sub wanted
     return if -d $_;
     return if -z;
     my $size = (stat)[7];
-    dotnew() if $opt{-verbose} && $dottime != time;
+    dot() if $opt{-verbose} && $dottime != time;
     my $path = $File::Find::name;
     ddump [$size, $path], [qw(size path)] if DEBUG;
     push @{$sizes_paths->{$size}}, $path;
@@ -142,14 +144,44 @@ Calls Carp::confess() on fatal errors.
 
 #----------------------------------------------------------------------
 
+sub insert_dups
+{
+    ddump 'entry', [\@_], [qw(*_)] if DEBUG;
+
+    my ($p, $a, $b) = @_;
+    
+    my $rl;
+    foreach my $q (@$p) {
+	foreach my $e (@$q) {
+	    $rl = $q if $e eq $a || $e eq $b;
+	}
+    }
+#    ddump ([$rl], [qw(rl)]) if DEBUG;
+
+    if ($rl) {
+	push(@$rl, $a) unless grep {$_ eq $a} @$rl;
+	push(@$rl, $b) unless grep {$_ eq $b} @$rl;
+    }
+    else {
+	push @$p, [$a, $b];
+    }
+
+    ddump ([$p], [qw(p)]) if DEBUG;
+    return $p;
+}
+
+#----------------------------------------------------------------------
+
 sub file_find_duplicate
 {
     ddump 'entry', [\@_], [qw(*_)] if DEBUG;
 
-    my @retval = ();
+    my $retval = [];
 
-    status "Reading file system"
-	if $opt{-verbose};
+    $| = 1 if $opt{-delete};
+
+#    status "Reading file system"
+#	if $opt{-verbose};
 
     if (@_) {
 	find(\&wanted, @_);
@@ -167,11 +199,12 @@ sub file_find_duplicate
 
     ddump [$sizes_paths], [qw(sizes_paths)] if DEBUG;
 
-    status "Found ",
-	scalar keys %$sizes_paths,
-	" different file sizes"
-	if $opt{-verbose};
+#    status "Found ",
+#	scalar keys %$sizes_paths,
+#	" different file sizes"
+#	if $opt{-verbose};
 
+    dot() if $opt{-verbose} && $dottime != time;
     foreach my $size (sort { $a <=> $b } keys %$sizes_paths) {
 	my $hashes_paths;
 	my @paths_with_same_size = sort @{$sizes_paths->{$size}};
@@ -180,7 +213,7 @@ sub file_find_duplicate
 	    if DEBUG;
 
 	next unless 1 < @paths_with_same_size;
-	dotnew() if $opt{-verbose} && $dottime != time;
+	dot() if $opt{-verbose} && $dottime != time;
 
 	status "Found ",
 	    scalar @paths_with_same_size,
@@ -192,7 +225,7 @@ sub file_find_duplicate
 	while (my $path1 = shift @paths_with_same_size) {
 	    last unless @paths_with_same_size;
 	    next if $dups{$path1};
-	    dotnew() if $opt{-verbose} && $dottime != time;
+	    dot() if $opt{-verbose} && $dottime != time;
 
 	    confess "undefined path found"
 		unless defined $path1;
@@ -203,7 +236,7 @@ sub file_find_duplicate
 		if $opt{-verbose} && $opt{-verbose} > 3;
 	    foreach my $path2 (@paths_with_same_size) {
 		next if $dups{$path2};
-		dotnew() if $opt{-verbose} && $dottime != time;
+		dot() if $opt{-verbose} && $dottime != time;
 
 		if ($path1 eq $path2) {
 		    warn "path '$path1' found more than once";
@@ -212,14 +245,8 @@ sub file_find_duplicate
 		status "Comparing file '$path1' against '$path2'"
 		    if $opt{-verbose} && $opt{-verbose} > 4;
 		if (compare_text($path1, $path2) == 0) {
-		    dotnl if $opt{-verbose};
-		    print "# ", $path1, "\n"
-			if $opt{-show_keeper};
-		    if ($opt{-delete}) {
-			print STDERR "unlinking ";
-			unlink $path2
-		    }
-		    print $path2, "\n";
+		    insert_dups($retval, $path1, $path2);
+		    dot() if $opt{-verbose} && $dottime != time;
 		    $dups{$path2}++;
 		}
 	    }
@@ -227,7 +254,19 @@ sub file_find_duplicate
     }
     dotnl;
 
-    return 1;
+    foreach my $rl (@$retval) {
+	@$rl = sort @$rl;
+	shift @$rl;
+	foreach my $f (sort @$rl) {
+	    if ($opt{-delete}) {
+		print STDERR "unlinking ";
+		unlink $f;
+	    }
+	    print $f, "\n";
+	}
+    }
+
+    return $retval;
 }
 
 #######################################################################

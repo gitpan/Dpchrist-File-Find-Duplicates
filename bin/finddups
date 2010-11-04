@@ -1,6 +1,6 @@
 #! /usr/bin/perl
 #######################################################################
-# $Id: finddups,v 1.32 2010-06-06 05:48:40 dpchrist Exp $
+# $Id: finddups,v 1.33 2010-08-19 22:48:28 dpchrist Exp $
 #######################################################################
 # uses:
 #----------------------------------------------------------------------
@@ -8,7 +8,7 @@
 use strict;
 use warnings;
 
-use constant				DEBUG => 1;
+use constant				DEBUG => 0;
 
 use Carp;
 use Digest::MD5;
@@ -23,7 +23,7 @@ use Pod::Usage;
 # globals:
 #----------------------------------------------------------------------
 
-our $VERSION = sprintf("%d.%03d", q$Revision: 1.32 $ =~ /(\d+)/g);
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.33 $ =~ /(\d+)/g);
 
 my $opt = \%Dpchrist::File::Find::Duplicates::opt;
 

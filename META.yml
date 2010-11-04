@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Dpchrist-File-Find-Duplicates
-version:             1.007
+version:             1.009
 abstract:            find duplicate files
 license:             ~
 author:              
