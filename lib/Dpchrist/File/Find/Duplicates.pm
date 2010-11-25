@@ -1,12 +1,11 @@
 #######################################################################
-# $Id: Duplicates.pm,v 1.9 2010-09-01 03:26:02 dpchrist Exp $
+# $Id: Duplicates.pm,v 1.10 2010-11-25 02:24:50 dpchrist Exp $
 #######################################################################
 # package:
 #----------------------------------------------------------------------
 
 package Dpchrist::File::Find::Duplicates;
 
-use 5.010000;
 use strict;
 use warnings;
 
@@ -22,7 +21,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = sprintf("%d.%03d", q$Revision: 1.9 $ =~ /(\d+)/g);
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.10 $ =~ /(\d+)/g);
 
 #######################################################################
 # uses:
