@@ -1,5 +1,5 @@
 #######################################################################
-# $Id: Makefile.PL,v 1.4 2010-11-25 02:24:50 dpchrist Exp $
+# $Id: Makefile.PL,v 1.5 2010-11-25 20:17:04 dpchrist Exp $
 #
 # Copyright 2010 by David Paul Christensen dpchrist@holgerdanske.com
 #
@@ -26,6 +26,7 @@ use Dpchrist::Module::MakefilePL (
 	lib/Dpchrist/File/Find/Duplicates.pm
 	bin/finddups
     ) ],
+    -readme	 	=> qw(lib/Dpchrist/File/Find/Duplicates.pm),
     -release		=> $ENV{RELEASE_ROOT},
 );
 
@@ -33,8 +34,8 @@ WriteMakefile(
     NAME              => 'Dpchrist::File::Find::Duplicates',
     VERSION_FROM      => 'lib/Dpchrist/File/Find/Duplicates.pm',
     PREREQ_PM         => {
-	'Dpchrist::Debug'	=> 1.036,
-	'Dpchrist::Module'	=> 1.016,
+	'Dpchrist::Debug'	=> 1.041,
+	'Dpchrist::Module'	=> 1.021,
 	'feature'		=> 0,
     },
     ABSTRACT_FROM	=> 'lib/Dpchrist/File/Find/Duplicates.pm',

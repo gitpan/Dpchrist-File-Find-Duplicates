@@ -1,5 +1,6 @@
 LICENSE
 MANIFEST
+README
 Makefile.PL
 bin/finddups
 lib/Dpchrist/File/Find/Duplicates.pm

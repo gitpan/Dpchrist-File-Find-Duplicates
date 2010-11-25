@@ -1,5 +1,5 @@
 #######################################################################
-# $Id: Duplicates.pm,v 1.10 2010-11-25 02:24:50 dpchrist Exp $
+# $Id: Duplicates.pm,v 1.11 2010-11-25 20:17:04 dpchrist Exp $
 #######################################################################
 # package:
 #----------------------------------------------------------------------
@@ -21,7 +21,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = sprintf("%d.%03d", q$Revision: 1.10 $ =~ /(\d+)/g);
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.11 $ =~ /(\d+)/g);
 
 #######################################################################
 # uses:
@@ -104,6 +104,14 @@ sub wanted
 Dpchrist::File::Find::Duplicates - find duplicate files
 
 =head1 DESCRIPTION
+
+This documentation describes module revision $Revision: 1.11 $.
+
+
+This is alpha test level software
+and may change or disappear at any time.
+
+
 
 =head2 SUBROUTINES
 
