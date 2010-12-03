@@ -1,5 +1,5 @@
 #######################################################################
-# $Id: Duplicates.pm,v 1.15 2010-11-30 20:20:14 dpchrist Exp $
+# $Id: Duplicates.pm,v 1.16 2010-12-03 05:13:49 dpchrist Exp $
 #######################################################################
 # package:
 #----------------------------------------------------------------------
@@ -21,7 +21,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = sprintf("%d.%03d", q$Revision: 1.15 $ =~ /(\d+)/g);
+our $VERSION = sprintf("%d.%03d", q$Revision: 1.16 $ =~ /(\d+)/g);
 
 #######################################################################
 # uses:
@@ -105,7 +105,7 @@ Dpchrist::File::Find::Duplicates - find duplicate files
 
 =head1 DESCRIPTION
 
-This documentation describes module revision $Revision: 1.15 $.
+This documentation describes module revision $Revision: 1.16 $.
 
 
 This is alpha test level software
@@ -292,9 +292,8 @@ None by default.
 
 All of the subroutines may be imported by using the ':all' tag:
 
-	use Dpchrist:File::Find::Duplicates qw( :all );
+    use Dpchrist::File::Find::Duplicates qw( :all );
 
-See 'perldoc Export' for everything in between.
 
 =head1 INSTALLATION
 
@@ -312,13 +311,6 @@ Minimal:
 Complete:
 
     $ cpan Bundle::Dpchrist
-
-The following warning may be safely ignored:
-
-    Can't locate Dpchrist/Module/MakefilePL.pm in @INC (@INC contains: /
-    etc/perl /usr/local/lib/perl/5.10.0 /usr/local/share/perl/5.10.0 /us
-    r/lib/perl5 /usr/share/perl5 /usr/lib/perl/5.10 /usr/share/perl/5.10
-    /usr/local/lib/site_perl .) at Makefile.PL line 22.
 
 
 =head2 PREREQUISITES
