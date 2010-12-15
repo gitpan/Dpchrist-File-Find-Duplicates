@@ -2,7 +2,7 @@ NAME
     Dpchrist::File::Find::Duplicates - find duplicate files
 
 DESCRIPTION
-    This documentation describes module revision $Revision: 1.17 $.
+    This documentation describes module revision $Revision: 1.18 $.
 
     This is alpha test level software and may change or disappear at any
     time.
